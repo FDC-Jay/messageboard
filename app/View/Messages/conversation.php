@@ -139,26 +139,28 @@
         e.preventDefault();
         
         var url = $(this).attr('href');
-        url = url.replace('<?php echo $this->webroot; ?>messages/conversation/', '<?php echo $this->webroot; ?>messages/<?php echo $this->request->params['id']; ?>/')
-        console.log(url);
-        $.ajax({
-            url: url,
-            dataType: 'json',
-            data: {
-                'Messages': {
-                    'msg_connect_id' : '<?php echo $this->request->params['id']; ?>'
-                }
-            },
-            type: 'post',
-            success: function(res) {
-                if(res != '') {
-                    $('.card-container').append(res.message);
-                } else {
-                    alert('Something went wrong');
-                }
-                console.log(res);
-            }
-        });
+        // url = url.replace('<?php echo $this->webroot; ?>messages/conversation/', '<?php echo $this->webroot; ?>messages/<?php echo $this->request->params['id']; ?>/')
+        // console.log(url);
+        // $.ajax({
+        //     url: url,
+        //     dataType: 'json',
+        //     data: {
+        //         'Messages': {
+        //             'msg_connect_id' : '<?php echo $this->request->params['id']; ?>'
+        //         }
+        //     },
+        //     type: 'post',
+        //     success: function(res) {
+        //         if(res != '') {
+        //             $('.card-container').append(res.message);
+        //         } else {
+        //             alert('Something went wrong');
+        //         }
+        //         console.log(res);
+        //     }
+        // });
+
+        var page = url.replace('<?php echo $this->webroot; ?>messages/conversation/page:', '')
     })
 
     function checkLongText(element){
