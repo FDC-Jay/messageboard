@@ -1,0 +1,164 @@
+@charset "utf-8";
+
+* {
+	margin:0;
+	padding:0;
+	box-sizing: border-box;
+}
+
+form input {
+	padding: 5px 10px;
+	outline: none;
+}
+
+.message {
+	background: gray;
+    color: #fff;
+    display: inline-block;
+    padding: 5px 10px;
+    min-width: 500px;
+    border-radius: 5px;
+    margin: 10px 0 0;
+}
+
+.message.success {
+	background: green
+}
+
+.message.error {
+	background: #ff5454;
+}
+
+.form-group label {
+	display: block;
+}
+
+.custom-file-label::after {
+	z-index: 999999999;
+}
+
+.custom-file input[type="file"] {
+	z-index: 999999999;
+	position: relative;
+	opacity: 0;
+	cursor: pointer;
+}
+
+.error-message {
+	color: red;
+}
+
+.form-error {
+	border: 1px solid red;
+}
+
+.dummy {
+	max-width: 130px;
+	border: 2px solid #000;
+	padding: 7px;
+}
+
+.profile {
+	max-width: 200px;
+	max-height: 150px;
+}
+.profile.sm {
+	width: 50px;
+	border-radius: 50%;
+	max-height: 50px;
+	object-fit: contain;
+}
+
+.info p {
+	margin-bottom: 5px;
+}
+
+textarea {
+	padding: 10px;
+}
+
+.form-radio {
+
+}
+
+.edit_icon {
+	font-size: 20px;
+	color: #000
+}
+
+.card {
+	width: 40%;
+}
+
+.card > a {
+	color: #000;
+	text-decoration: none !important;
+}
+
+.card-container {
+	height: 100%;
+    max-height: 65vh;
+    overflow-y: scroll;
+}
+
+.card-body-container {
+	width: 100%;
+}
+
+.card-body {
+	flex-wrap: wrap;
+}
+
+.card-body img {
+	width: 50px;
+}
+
+.card-body .card-body-container {
+	width: calc(100% - 80px);
+}
+
+.card-body a {
+	
+}
+
+.card-body .deleteMsg {
+	color: #000;
+	opacity: 0;
+}
+
+.card-body:hover .deleteMsg {
+	opacity: 1;
+}
+
+.form-radio {
+	padding: 0 5px;
+}
+
+.form-radio.form-error {
+	display: inline-block;
+	border: none;
+}
+
+.form-radio.form-error:after {
+	content: "Gender field is required";
+	display: block;
+	color: red;
+}
+
+#MessageConversationForm {
+	position: fixed;
+    bottom: 15px;
+    width: 65vw;
+    max-width: 1140px;
+}
+
+.searchIcon {
+	font-size: 20px;
+	color: #000;
+	text-decoration: none !important;
+}
+
+.pagination {
+	margin-top: 40px;
+	justify-content: center;
+}
