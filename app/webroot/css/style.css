@@ -175,3 +175,15 @@ nav .profile_link {
 nav a:hover {
 	color: #0056b3 !important
 }
+
+.card-container::-webkit-scrollbar {
+	width: 1px;
+}
+
+.card-container::-webkit-scrollbar-track {
+	background: transparent;
+}
+
+.card-container::-webkit-scrollbar-thumb {
+	background: transparent;
+}
