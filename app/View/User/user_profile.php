@@ -32,6 +32,7 @@
 <p class="mt-3 mb-0"><strong>hobby</strong></p>
 <?php echo !empty($userdata['hobby']) ? $userdata['hobby'] : '-'; ?>
 
-<div class="message-btn mt-5">
+<div class="message-btn mt-5 mb-3">
     <a href="<?php echo $this->webroot; ?>messages/add" class="btn btn-info">New Message</a>
 </div>
+<a href="<?php echo $this->webroot; ?>logout" class="btn btn-danger">Logout</a>

@@ -15,9 +15,6 @@ class LoginController extends AppController {
     }
 
     public function index() {
-        $this->set('page_title', 'Login');
-        $this->render('index');
-
         if($this->request->is('post')) {
             if ($this->Auth->login()) {
                 $data = [
@@ -31,7 +28,7 @@ class LoginController extends AppController {
 
                 return $this->redirect($this->getUrl . '/user/' . $this->Auth->user('id'));
             }
-            $this->Flash->error(__('Invalid username or password, try again'));
+            $this->Flash->error('Invalid username or password, try again');
         }
     }
 

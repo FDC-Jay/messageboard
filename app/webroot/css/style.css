@@ -144,6 +144,7 @@ textarea {
 .card.page-index .card-body > a:not(.deleteConvo) {
 	width: 90%;
 	text-decoration: none !important;
+	display: flex;
 }
 
 .form-radio {
@@ -178,6 +179,10 @@ textarea {
 .pagination {
 	margin-top: 40px;
 	justify-content: center;
+}
+
+.pagination .disabled {
+	display: none;
 }
 
 nav .profile_link {

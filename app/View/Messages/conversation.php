@@ -3,23 +3,23 @@
     <input type="text" name="search" hidden>
 </div>
 <section id="messages">
-<div class="card-container">
-    <?php
-        if($messages) {
-            foreach ( $messages as $key => $message) :
-                echo $this->element('message-card', array(
-                    'profile_pic' => $message['User']['profile_pic'],
-                    'message_id' => $message['Messages']['id'],
-                    'msg_id' => $message['Messages']['id'],
-                    'content' => $message['Messages']['content'],
-                    'is_current_user' => $user_id != $message['Messages']['user_id'] ? true : false,
-                    'datetime' => $message['Messages']['modified'],
-                    'page' => 'conversation'
-                ));
-            endforeach;
-        }
-        ?>
-</div>
+    <div class="card-container">
+        <?php
+            if($messages) {
+                foreach ( $messages as $key => $message) :
+                    echo $this->element('message-card', array(
+                        'profile_pic' => $message['User']['profile_pic'],
+                        'message_id' => $message['Messages']['id'],
+                        'msg_id' => $message['Messages']['id'],
+                        'content' => $message['Messages']['content'],
+                        'is_current_user' => $user_id != $message['Messages']['user_id'] ? true : false,
+                        'datetime' => $message['Messages']['modified'],
+                        'page' => 'conversation'
+                    ));
+                endforeach;
+            }
+            ?>
+    </div>
 </section>
     <div class="pagination">
         <?php
