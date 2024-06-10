@@ -29,7 +29,7 @@ class MessagesController extends AppController {
                     'MessageConnects.user_two' => array($this->Auth->user('id')),
                 )
             ),
-            'limit' => 2
+            'limit' => 10
         ];
 
         $connect_ids = $this->Paginator->paginate('MessageConnects');
@@ -83,7 +83,7 @@ class MessagesController extends AppController {
                 ));
 
             }
-            
+
             return json_encode(array('message' => $response, 'paginator' => $this->params['paging']['MessageConnects']));
         }
 
@@ -204,7 +204,7 @@ class MessagesController extends AppController {
             'order' => [
                 'Messages.modified' => 'asc'
             ],
-            'limit' => 5
+            'limit' => 10
         ];
 
         
