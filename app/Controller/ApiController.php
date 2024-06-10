@@ -4,7 +4,8 @@ App::uses('AppController', 'Controller');
 class ApiController extends AppController {
     public $uses = array(
         'Messages',
-        'User'
+        'User',
+        'MessageConnects'
     );
 
     public function beforeFilter(){
@@ -18,7 +19,8 @@ class ApiController extends AppController {
             'messageAdd',
             'messageDelete',
             'messageSearch',
-            'ajaxConversation'
+            'ajaxConversation',
+            'convoDelete',
         ));
     }
 
@@ -127,46 +129,26 @@ class ApiController extends AppController {
         return json_encode($response);
     }
 
-    public function ajaxConversation() {
-        // $this->layout = 'false'; // Use an empty layout
-
-        $id = $this->request->params['named']['page'];
-
-        $fields = [
-            'User.name',
-            'User.profile_pic',
-            'Messages.id',
-            'Messages.user_id',
-            'Messages.content',
-            'Messages.modified'
-        ];
-        $conditions = [
-            'Messages.msg_connect_id' => $id,
-            'Messages.status' => 1
+    public function convoDelete() {
+        $response = [
+            'status' => false
         ];
 
-        $this->Paginator->settings = [
-            'fields' => $fields,
-            'conditions' => $conditions,
-            'joins' => [
-                [
-                    'table' => 'users',
-                    'alias' => 'User',
-                    'type' => 'LEFT',
-                    'conditions' => 'User.id = Messages.user_id'
-                ]
-            ],
-            'order' => [
-                'Messages.modified' => 'asc'
-            ],
-            'limit' => 7
-        ];
+        if($this->request->is('post')) {    
+            $data = $this->request->data;
+            $saveParams = array(
+                'MessageConnects' => array(
+                    'status' => 0
+                )
+            );
 
-        $messages = $this->Paginator->paginate('Messages');
+            $this->MessageConnects->read('status', $data['id']);
+            $this->MessageConnects->set($saveParams);
+            if($this->MessageConnects->save($saveParams)) {
+                $response['status'] = true;
+            }       
+        }
 
-        debug($messages);
-
-        $this->set(compact('messages'));
-        $this->set('_serialize', ['messages']); // JSON serialize the response
+        return json_encode($response);
     }
 }

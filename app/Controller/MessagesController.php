@@ -18,27 +18,29 @@ class MessagesController extends AppController {
     }
 
     public function index(){
-        // check convo by user
-        $connect_id = $this->MessageConnects->find('all', array(
+        $this->Paginator->settings = [
             'fields' => array(
                 'MessageConnects.id', 
                 'MessageConnects.user_one', 
                 'MessageConnects.user_two'
             ),
             'conditions' => array(
+                'MessageConnects.status' => 1,
                 'OR' => array(
                     'MessageConnects.user_one' => array($this->Auth->user('id')),
                     'MessageConnects.user_two' => array($this->Auth->user('id')),
                 )
-            )
-        ));
+            ),
+            'limit' => 5
+        ];
 
-        $this->set('connect_id', $connect_id);
+        $connect_ids = $this->Paginator->paginate('MessageConnects');
 
-        if(!empty($connect_id)) {
+
+        if(!empty($connect_ids)) {
             $messages = [];
 
-            foreach ($connect_id as $convo) {
+            foreach ($connect_ids as $convo) {
                 $fields = [
                     'User.id',
                     'User.name',

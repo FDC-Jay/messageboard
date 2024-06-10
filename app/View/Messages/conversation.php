@@ -2,23 +2,25 @@
     <a href="javascript:;" class="searchIcon">Search <i class="fa fa-search" aria-hidden="true"></i></a>
     <input type="text" name="search" hidden>
 </div>
-
+<section id="messages">
 <div class="card-container">
     <?php
-    if($messages) {
-        foreach ( $messages as $key => $message) :
-            echo $this->element('message-card', array(
-                'profile_pic' => $message['User']['profile_pic'],
-                'message_id' => $message['Messages']['id'],
-                'msg_id' => $message['Messages']['id'],
-                'content' => $message['Messages']['content'],
-                'is_current_user' => $user_id != $message['Messages']['user_id'] ? true : false,
-                'page' => 'conversation'
-            ));
-        endforeach;
-    }
-    ?>
+        if($messages) {
+            foreach ( $messages as $key => $message) :
+                echo $this->element('message-card', array(
+                    'profile_pic' => $message['User']['profile_pic'],
+                    'message_id' => $message['Messages']['id'],
+                    'msg_id' => $message['Messages']['id'],
+                    'content' => $message['Messages']['content'],
+                    'is_current_user' => $user_id != $message['Messages']['user_id'] ? true : false,
+                    'datetime' => $message['Messages']['modified'],
+                    'page' => 'conversation'
+                ));
+            endforeach;
+        }
+        ?>
 </div>
+</section>
     <div class="pagination">
         <?php
         echo $this->Paginator->next('See more', null, null, ['class' => 'disabled']);
@@ -168,15 +170,18 @@
                 success: function(res) {
                     if(res != '') {
                         $('.card-container').append(res.message);
+                        $('#messages').animate({ scrollTop: $('.card-container').height() }, 500);
+
                         if(res.paginator.nextPage === true) {
                             pageNum++;
                         } else {
                             $('.pagination .next a').hide();
                         }
+                        
                     } else {
                         alert('Something went wrong');
                     }
-                    
+
                     isLoadingFlg = false;
                 }
             });

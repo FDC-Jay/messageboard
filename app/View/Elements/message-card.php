@@ -1,4 +1,4 @@
-<div class="card mb-2 <?php echo isset($is_current_user) && $is_current_user ? 'mr-auto' : 'ml-auto'; ?>">
+<div class="card mb-2 <?php echo isset($is_current_user) && $is_current_user ? 'mr-auto' : 'ml-auto'; ?> page-<?php echo $page; ?>">
     <?php if ($page == 'index') : ?>
         <a href="<?php echo $this->webroot . 'messages/conversation/' . $message_id; ?>">
         <?php endif; ?>
@@ -17,7 +17,12 @@
                 <a href="javascript:;" class="deleteMsg" data-msgid="<?php echo isset($msg_id) ? $msg_id : ''; ?>">
                     <i class="fa fa-trash-o" aria-hidden="true"></i>
                 </a>
+            <?php else : ?>
+                <a href="javascript:;" class="deleteConvo" data-msgid="<?php echo isset($msg_id) ? $msg_id : ''; ?>">
+                    <i class="fa fa-trash-o" aria-hidden="true"></i>
+                </a>
             <?php endif; ?>
+            <small><?php echo !empty($datetime) ? $datetime : ''; ?></small>
 
         </div>
         <?php if ($page == 'index') : ?>

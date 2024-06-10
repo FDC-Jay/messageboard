@@ -97,8 +97,7 @@ textarea {
 
 .card-container {
 	height: 100%;
-    max-height: 65vh;
-    overflow-y: scroll;
+    
 }
 
 .card-body-container {
@@ -130,6 +129,23 @@ textarea {
 	opacity: 1;
 }
 
+.card .deleteConvo {
+	position: absolute;
+	right: 20px;
+}
+
+.card small {
+	font-size: 12px;
+    text-align: right;
+    width: 100%;
+    font-weight: 300;
+}
+
+.card.page-index .card-body > a:not(.deleteConvo) {
+	width: 90%;
+	text-decoration: none !important;
+}
+
 .form-radio {
 	padding: 0 5px;
 }
@@ -147,9 +163,10 @@ textarea {
 
 #MessageConversationForm {
 	position: fixed;
-    bottom: 15px;
+    bottom: 0;
     width: 65vw;
     max-width: 1140px;
+	background: #fff;
 }
 
 .searchIcon {
@@ -176,14 +193,19 @@ nav a:hover {
 	color: #0056b3 !important
 }
 
-.card-container::-webkit-scrollbar {
+#messages::-webkit-scrollbar {
 	width: 1px;
 }
 
-.card-container::-webkit-scrollbar-track {
+#messages::-webkit-scrollbar-track {
 	background: transparent;
 }
 
-.card-container::-webkit-scrollbar-thumb {
+#messages::-webkit-scrollbar-thumb {
 	background: transparent;
+}
+
+#messages {
+	max-height: 60vh;
+    overflow-y: scroll;
 }
