@@ -49,6 +49,15 @@
 
 <script>
     var base_url = '<?php echo $this->webroot; ?>';
+    var hasNextPage = '<?php echo $this->request->params['paging']['Messages']['nextPage']; ?>';
+    var pageNum = '<?php echo $this->request->params['paging']['Messages']['page']; ?>';
+
+    if(hasNextPage) {
+        pageNum++;
+    } else {
+        $('.pagination .next a').hide();
+    }
+
     $('#MessageConversationForm').on('submit', function(e){
         e.preventDefault();
         let message = $('#MessageContent').val();
@@ -135,30 +144,43 @@
 
     });
 
+    var isLoadingFlg = false;
+
     $('.pagination a').click(function(e){
         e.preventDefault();
         
-        var url = $(this).attr('href');
-        // url = url.replace('<?php echo $this->webroot; ?>messages/conversation/', '<?php echo $this->webroot; ?>messages/<?php echo $this->request->params['id']; ?>/')
-        // console.log(url);
-        // $.ajax({
-        //     url: url,
-        //     dataType: 'json',
-        //     data: {
-        //         'Messages': {
-        //             'msg_connect_id' : '<?php echo $this->request->params['id']; ?>'
-        //         }
-        //     },
-        //     type: 'post',
-        //     success: function(res) {
-        //         if(res != '') {
-        //             $('.card-container').append(res.message);
-        //         } else {
-        //             alert('Something went wrong');
-        //         }
-        //         console.log(res);
-        //     }
-        // });
+        
+        var url = '<?php echo $this->webroot; ?>messages/conversation/<?php echo $this->request->params['id']; ?>/page:' + pageNum;
+
+        if(!isLoadingFlg) {
+            $.ajax({
+                url: url,
+                dataType: 'json',
+                data: {
+                    'Messages': {
+                        'msg_connect_id' : '<?php echo $this->request->params['id']; ?>'
+                    }
+                },
+                beforeSend: function(){
+                    isLoadingFlg = true;
+                },  
+                type: 'post',
+                success: function(res) {
+                    if(res != '') {
+                        $('.card-container').append(res.message);
+                        if(res.paginator.nextPage === true) {
+                            pageNum++;
+                        } else {
+                            $('.pagination .next a').hide();
+                        }
+                    } else {
+                        alert('Something went wrong');
+                    }
+                    
+                    isLoadingFlg = false;
+                }
+            });
+        }
 
         var page = url.replace('<?php echo $this->webroot; ?>messages/conversation/page:', '')
     })

@@ -12,9 +12,14 @@
 ?>
 
 <h2 class="mb-3">User Profile</h2>
-<a class="mb-3 btn btn-secondary" href="<?php echo $this->webroot;?>messages">Messages</a>
 <div class="profile-container d-flex mt-4">
-    <img class="profile" src="<?php echo $userdata['profile_pic'] ?>" alt="<?php echo $userdata['name']; ?>">
+    <?php 
+        $img_path = $this->webroot . '/img/profile.png';
+        if(!empty($userdata['profile_pic'])) {
+            $img_path = $userdata['profile_pic'];
+        }
+    ?>
+    <img class="profile" src="<?php echo $img_path ?>" alt="<?php echo $userdata['name']; ?>">
     <div class="info ml-3">
         <h3><?php echo !empty($userdata['name']) ? $userdata['name'] : ''; ?> <?php echo $age; ?></h3>
         <p><strong>Gender:</strong> <?php echo !empty($userdata['gender']) ? $gender[$userdata['gender']] : '-'; ?></p>

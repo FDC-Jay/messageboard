@@ -1,230 +1,113 @@
-<?php
-/**
- * @link          https://cakephp.org CakePHP(tm) Project
- * @package       app.View.Pages
- * @since         CakePHP(tm) v 0.10.0.1076
- */
-
-if (!Configure::read('debug')):
-	throw new NotFoundException();
-endif;
-
-App::uses('Debugger', 'Utility');
-?>
-<h2><?php echo __d('cake_dev', 'Release Notes for CakePHP %s.', Configure::version()); ?></h2>
-<p>
-	<?php echo $this->Html->link(__d('cake_dev', 'Read the changelog'), 'https://cakephp.org/changelogs/' . Configure::version()); ?>
-</p>
-<?php
-if (Configure::read('debug') > 0):
-	Debugger::checkSecurityKeys();
-endif;
-?>
-<?php if (file_exists(WWW_ROOT . 'css' . DS . 'cake.generic.css')): ?>
-	<p id="url-rewriting-warning" style="background-color:#e32; color:#fff;">
-		<?php echo __d('cake_dev', 'URL rewriting is not properly configured on your server.'); ?>
-		1) <a target="_blank" href="https://book.cakephp.org/2.0/en/installation/url-rewriting.html" style="color:#fff;">Help me configure it</a>
-		2) <a target="_blank" href="https://book.cakephp.org/2.0/en/development/configuration.html#cakephp-core-configuration" style="color:#fff;">I don't / can't use URL rewriting</a>
-	</p>
-<?php endif; ?>
-<p>
-<?php
-if (version_compare(PHP_VERSION, '5.2.8', '>=')):
-	echo '<span class="notice success">';
-		echo __d('cake_dev', 'Your version of PHP is 5.2.8 or higher.');
-	echo '</span>';
-else:
-	echo '<span class="notice">';
-		echo __d('cake_dev', 'Your version of PHP is too low. You need PHP 5.2.8 or higher to use CakePHP.');
-	echo '</span>';
-endif;
-?>
-</p>
-<p>
-	<?php
-	if (is_writable(TMP)):
-		echo '<span class="notice success">';
-			echo __d('cake_dev', 'Your tmp directory is writable.');
-		echo '</span>';
-	else:
-		echo '<span class="notice">';
-			echo __d('cake_dev', 'Your tmp directory is NOT writable.');
-		echo '</span>';
-	endif;
-	?>
-</p>
-<p>
-	<?php
-	$settings = Cache::settings();
-	if (!empty($settings)):
-		echo '<span class="notice success">';
-			echo __d('cake_dev', 'The %s is being used for core caching. To change the config edit %s', '<em>' . $settings['engine'] . 'Engine</em>', CONFIG . 'core.php');
-		echo '</span>';
-	else:
-		echo '<span class="notice">';
-			echo __d('cake_dev', 'Your cache is NOT working. Please check the settings in %s', CONFIG . 'core.php');
-		echo '</span>';
-	endif;
-	?>
-</p>
-<p>
-	<?php
-	$filePresent = null;
-	if (file_exists(CONFIG . 'database.php')):
-		echo '<span class="notice success">';
-			echo __d('cake_dev', 'Your database configuration file is present.');
-			$filePresent = true;
-		echo '</span>';
-	else:
-		echo '<span class="notice">';
-			echo __d('cake_dev', 'Your database configuration file is NOT present.');
-			echo '<br/>';
-			echo __d('cake_dev', 'Rename %s to %s', CONFIG . 'database.php.default', CONFIG . 'database.php');
-		echo '</span>';
-	endif;
-	?>
-</p>
-<?php
-if (isset($filePresent)):
-	App::uses('ConnectionManager', 'Model');
-	try {
-		$connected = ConnectionManager::getDataSource('default');
-	} catch (Exception $connectionError) {
-		$connected = false;
-		$errorMsg = $connectionError->getMessage();
-		if (method_exists($connectionError, 'getAttributes')):
-			$attributes = $connectionError->getAttributes();
-			if (isset($attributes['message'])):
-				$errorMsg .= '<br />' . $attributes['message'];
-			endif;
-		endif;
-	}
-	?>
-	<p>
-		<?php
-			if ($connected && $connected->isConnected()):
-				echo '<span class="notice success">';
-					echo __d('cake_dev', 'CakePHP is able to connect to the database.');
-				echo '</span>';
-			else:
-				echo '<span class="notice">';
-					echo __d('cake_dev', 'CakePHP is NOT able to connect to the database.');
-					echo '<br /><br />';
-					echo $errorMsg;
-				echo '</span>';
-			endif;
-		?>
-	</p>
-<?php
-endif;
-
-App::uses('Validation', 'Utility');
-if (!Validation::alphaNumeric('cakephp')):
-	echo '<p><span class="notice">';
-		echo __d('cake_dev', 'PCRE has not been compiled with Unicode support.');
-		echo '<br/>';
-		echo __d('cake_dev', 'Recompile PCRE with Unicode support by adding <code>--enable-unicode-properties</code> when configuring');
-	echo '</span></p>';
-endif;
-?>
-
-<p>
-	<?php
-	if (CakePlugin::loaded('DebugKit')):
-		echo '<span class="notice success">';
-			echo __d('cake_dev', 'DebugKit plugin is present');
-		echo '</span>';
-	else:
-		echo '<span class="notice">';
-			echo __d('cake_dev', 'DebugKit is not installed. It will help you inspect and debug different aspects of your application.');
-			echo '<br/>';
-			echo __d('cake_dev', 'You can install it from %s', $this->Html->link('GitHub', 'https://github.com/cakephp/debug_kit/tree/2.2'));
-		echo '</span>';
-	endif;
-	?>
-</p>
-
-<h3><?php echo __d('cake_dev', 'Editing this Page'); ?></h3>
-<p>
-<?php
-echo __d('cake_dev', 'To change the content of this page, edit: %s.<br />
-To change its layout, edit: %s.<br />
-You can also add some CSS styles for your pages at: %s.',
-	'APP/View/Pages/home.ctp', 'APP/View/Layouts/default.ctp', 'APP/webroot/css');
-?>
-</p>
-
-<h3><?php echo __d('cake_dev', 'Getting Started'); ?></h3>
-<p>
-	<?php
-	echo $this->Html->link(
-		sprintf('<strong>%s</strong> %s', __d('cake_dev', 'New'), __d('cake_dev', 'CakePHP 2.0 Docs')),
-		'https://book.cakephp.org/2.0/en/',
-		array('target' => '_blank', 'escape' => false)
-	);
-	?>
-</p>
-<p>
-	<?php
-	echo $this->Html->link(
-		__d('cake_dev', 'The 15 min Blog Tutorial'),
-		'https://book.cakephp.org/2.0/en/tutorials-and-examples/blog/blog.html',
-		array('target' => '_blank', 'escape' => false)
-	);
-	?>
-</p>
-
-<h3><?php echo __d('cake_dev', 'Official Plugins'); ?></h3>
-<p>
-<ul>
-	<li>
-		<?php echo $this->Html->link('DebugKit', 'https://github.com/cakephp/debug_kit/tree/2.2') ?>:
-		<?php echo __d('cake_dev', 'provides a debugging toolbar and enhanced debugging tools for CakePHP applications.'); ?>
-	</li>
-	<li>
-		<?php echo $this->Html->link('Localized', 'https://github.com/cakephp/localized') ?>:
-		<?php echo __d('cake_dev', 'contains various localized validation classes and translations for specific countries'); ?>
-	</li>
-</ul>
-</p>
-
-<h3><?php echo __d('cake_dev', 'More about CakePHP'); ?></h3>
-<p>
-<?php echo __d('cake_dev', 'CakePHP is a rapid development framework for PHP which uses commonly known design patterns like Active Record, Association Data Mapping, Front Controller and MVC.'); ?>
-</p>
-<p>
-<?php echo __d('cake_dev', 'Our primary goal is to provide a structured framework that enables PHP users at all levels to rapidly develop robust web applications, without any loss to flexibility.'); ?>
-</p>
-
-<ul>
-	<li><a href="https://cakephp.org">CakePHP</a>
-	<ul><li><?php echo __d('cake_dev', 'The Rapid Development Framework'); ?></li></ul></li>
-	<li><a href="https://book.cakephp.org"><?php echo __d('cake_dev', 'CakePHP Documentation'); ?> </a>
-	<ul><li><?php echo __d('cake_dev', 'Your Rapid Development Cookbook'); ?></li></ul></li>
-	<li><a href="https://api.cakephp.org"><?php echo __d('cake_dev', 'CakePHP API'); ?> </a>
-	<ul><li><?php echo __d('cake_dev', 'Quick API Reference'); ?></li></ul></li>
-	<li><a href="https://bakery.cakephp.org"><?php echo __d('cake_dev', 'The Bakery'); ?> </a>
-	<ul><li><?php echo __d('cake_dev', 'Everything CakePHP'); ?></li></ul></li>
-	<li><a href="https://plugins.cakephp.org"><?php echo __d('cake_dev', 'CakePHP Plugins'); ?> </a>
-	<ul><li><?php echo __d('cake_dev', 'A comprehensive list of all CakePHP plugins created by the community'); ?></li></ul></li>
-	<li><a href="https://community.cakephp.org"><?php echo __d('cake_dev', 'CakePHP Community Center'); ?> </a>
-	<ul><li><?php echo __d('cake_dev', 'Everything related to the CakePHP community in one place'); ?></li></ul></li>
-	<li><a href="http://discourse.cakephp.org/">CakePHP Official Forum </a>
-	<ul><li>CakePHP discussion forum</li></ul></li>
-	<li><a href="http://discourse.cakephp.org/"><?php echo __d('cake_dev', 'CakePHP Official Forum'); ?> </a>
-	<ul><li><?php echo __d('cake_dev', 'CakePHP discussion forum'); ?></li></ul></li>
-	<li><a href="irc://irc.freenode.net/cakephp">irc.freenode.net #cakephp</a>
-	<ul><li><?php echo __d('cake_dev', 'Live chat about CakePHP'); ?></li></ul></li>
-	<li><a href="https://github.com/cakephp/"><?php echo __d('cake_dev', 'CakePHP Code'); ?> </a>
-	<ul><li><?php echo __d('cake_dev', 'Find the CakePHP code on GitHub and contribute to the framework'); ?></li></ul></li>
-	<li><a href="https://github.com/cakephp/cakephp/issues"><?php echo __d('cake_dev', 'CakePHP Issues'); ?> </a>
-	<ul><li><?php echo __d('cake_dev', 'CakePHP Issues'); ?></li></ul></li>
-	<li><a href="https://github.com/cakephp/cakephp/wiki#roadmaps"><?php echo __d('cake_dev', 'CakePHP Roadmaps'); ?> </a>
-	<ul><li><?php echo __d('cake_dev', 'CakePHP Roadmaps'); ?></li></ul></li>
-	<li><a href="https://training.cakephp.org"><?php echo __d('cake_dev', 'Training'); ?> </a>
-	<ul><li><?php echo __d('cake_dev', 'Join a live session and get skilled with the framework'); ?></li></ul></li>
-	<li><a href="https://cakefest.org"><?php echo __d('cake_dev', 'CakeFest'); ?> </a>
-	<ul><li><?php echo __d('cake_dev', 'Don\'t miss our annual CakePHP conference'); ?></li></ul></li>
-	<li><a href="https://cakefoundation.org"><?php echo __d('cake_dev', 'Cake Software Foundation'); ?> </a>
-	<ul><li><?php echo __d('cake_dev', 'Promoting development related to CakePHP'); ?></li></ul></li>
-</ul>
+<div class="container">
+<svg viewBox="0 0 300 300" style="width: 300px; margin: 0 auto; display: block;">
+    <title>User Interaction</title>
+    <defs>
+      <mask id="firstMask" maskUnits="userSpaceOnUse">
+        <path id="first-motion-path-mask" fill="none" stroke="#7c7c7c" stroke-dasharray="16.67,8.33,0,0" stroke-width="4.17" d="M38.047 116.3s15.836-70.521 57.577-13.723c41.74 56.797 89.961-17.345 89.771-48.221-.191-30.877-35.451-50.89-34.689-9.721.762 41.169 15.82 88.241 54.892 78.905 39.072-9.337 29.733-23.251 30.114-32.971" />
+      </mask>
+      <mask id="secondMask" maskUnits="userSpaceOnUse">
+        <path id="second-motion-path-mask" fill="none" stroke="#7c7c7c" stroke-dasharray="16.67,8.33,0,0" stroke-width="4.17" d="M260.327 79.106s38.955 22.342 11.795 70.894" />
+      </mask>
+    </defs>
+    <g id="message-icon">
+      <path fill="#d04384" d="M24.448 160.797a7.049 7.049 0 0 1-1.092 2.819c-1.355 2.056-9.02 2.078-9.02 2.078s14.853 2.041 17.936-2.143c.791-1.074 1.242-1.988 1.475-2.754h20.184c7.954 0 14.413-5.655 14.413-12.62v-6.311c0-6.965-6.459-12.62-14.413-12.62H24.327c-7.955 0-14.413 5.655-14.413 12.62v6.311c0 6.965 6.458 12.62 14.413 12.62h.121Z" />
+      <path fill="#ff5ea8" d="M22.814 159.922a7.069 7.069 0 0 1-1.093 2.818c-1.355 2.056-7.395 2.95-7.395 2.95s13.228 1.169 16.311-3.014c.791-1.075 1.242-1.989 1.476-2.754h20.183c7.955 0 14.413-5.655 14.413-12.621v-6.31c0-6.966-6.458-12.621-14.413-12.621H22.692c-7.954 0-14.413 5.655-14.413 12.621v6.31c0 6.966 6.459 12.621 14.413 12.621h.122Z" />
+      <circle class="message-dot" cx="23.485" cy="145.219" r="3.498" fill="#d04384" />
+      <circle class="message-dot" cx="37.494" cy="145.219" r="3.498" fill="#d04384" />
+      <circle class="message-dot" cx="51.503" cy="145.219" r="3.498" fill="#d04384" />
+    </g>
+    <path id="first-motion-path" mask="url(#firstMask)" fill="none" stroke="#7c7c7c" stroke-dasharray="16.67,8.33,0,0" stroke-width="4.17" d="M38.047 116.3s15.836-70.521 57.577-13.723c41.74 56.797 89.961-17.345 89.771-48.221-.191-30.877-35.451-50.89-34.689-9.721.762 41.169 15.82 88.241 54.892 78.905 39.072-9.337 29.733-23.251 30.114-32.971" />
+    <g id="left-arm">
+      <path id="left-hand__bottom" fill="#f8d2bf" d="M73.861 236.922c-5.193-8.291-7.287-17.828-5.196-27.232 4.866-21.891 30.578-34.825 57.381-28.867 26.802 5.959 44.611 28.57 39.744 50.46-3.704 16.661-19.483 28.134-38.625 30.037l-6.95 19.155-54.925-19.929 8.571-23.624Z" />
+      <g id="left-sleeve">
+        <path fill="#599fff" d="M114.925 288.395c4.554-9.353.658-20.644-8.695-25.199l-22.595-11.002c-9.353-4.554-20.644-.658-25.199 8.695L34.35 310.355c-4.555 9.353-.659 20.644 8.694 25.198l22.596 11.003c9.353 4.554 20.644.658 25.198-8.695l24.087-49.466Z" />
+        <path fill="#ff5ea8" d="M135.106 271.593a7.925 7.925 0 0 0-3.653-10.589l-61.098-29.751c-3.93-1.914-8.675-.276-10.589 3.654l-4.624 9.496c-1.914 3.93-.276 8.675 3.654 10.589l61.097 29.75a7.925 7.925 0 0 0 10.59-3.654l4.623-9.495Z" />
+      </g>
+    </g>
+    <g id="mobile-phone">
+      <g id="device">
+        <g id="body">
+          <path fill="#ff5ea8" d="M214.899 97.811a7.863 7.863 0 0 0-5.93-9.401l-69.844-15.816a7.865 7.865 0 0 0-9.402 5.93l-33.415 147.57a7.864 7.864 0 0 0 5.93 9.402l69.845 15.815a7.864 7.864 0 0 0 9.402-5.93l33.414-147.57Z" />
+          <path fill="#ffa5ce" d="M212.417 94.651a7.77 7.77 0 0 0-5.859-9.289l-69.009-15.626a7.77 7.77 0 0 0-9.289 5.859L94.799 223.37a7.77 7.77 0 0 0 5.859 9.289l69.009 15.626a7.77 7.77 0 0 0 9.289-5.859l33.461-147.775Z" />
+        </g>
+        <path id="screen" fill="#d0e4ff" d="M206.719 97.406a6.878 6.878 0 0 0-5.187-8.224l-61.093-13.833a6.877 6.877 0 0 0-8.223 5.187l-31.719 140.079a6.877 6.877 0 0 0 5.187 8.223l61.093 13.834a6.878 6.878 0 0 0 8.223-5.187l31.719-140.079Z" />
+        <g id="top-notch">
+          <path fill="#ffa5ce" d="M188.991 86.73a1.624 1.624 0 0 0-1.224-1.94l-33.014-7.475a1.623 1.623 0 0 0-1.94 1.224l-.716 3.163a1.622 1.622 0 0 0 1.224 1.94l33.013 7.476a1.622 1.622 0 0 0 1.94-1.224l.717-3.164Z" />
+          <path fill="#ffdcec" d="M180.802 86.299a1.765 1.765 0 0 0-1.332-2.112l-22.246-5.037a1.766 1.766 0 0 0-.78 3.444l22.246 5.037a1.765 1.765 0 0 0 2.112-1.332ZM184.747 85.382a1.765 1.765 0 1 1-.78 3.444 1.765 1.765 0 0 1 .78-3.444Z" />
+        </g>
+      </g>
+      <g id="ui">
+        <g id="current-messages">
+          <g id="message-row-1">
+            <g id="message">
+              <path fill="#bbb" d="M187.918 102.876a5.973 5.973 0 0 0-4.505-7.142l-41.812-9.468a5.974 5.974 0 0 0-7.142 4.505l-2.637 11.647a5.974 5.974 0 0 0 4.505 7.142l41.812 9.467a5.973 5.973 0 0 0 7.142-4.504l2.637-11.647Z" />
+              <path fill="#f5f5f5" d="M187.404 101.382a5.975 5.975 0 0 0-4.505-7.142l-41.812-9.467a5.973 5.973 0 0 0-7.142 4.504l-2.637 11.647a5.973 5.973 0 0 0 4.505 7.142l41.811 9.468a5.973 5.973 0 0 0 7.142-4.505l2.638-11.647Z" />
+              <path fill="#bbb" d="M182.745 99.724a.92.92 0 0 0-.693-1.098l-42.09-9.53a.918.918 0 0 0-1.098.692l-.089.393a.918.918 0 0 0 .692 1.098l42.091 9.531a.92.92 0 0 0 1.098-.693l.089-.393ZM178.097 103.018a.918.918 0 0 0-.692-1.098l-38.379-8.691a.92.92 0 0 0-1.098.693l-.089.393a.918.918 0 0 0 .692 1.098l38.379 8.69a.919.919 0 0 0 1.098-.693l.089-.392ZM179.843 107.759a.918.918 0 0 0-.692-1.098l-41.061-9.298a.919.919 0 0 0-1.098.693l-.089.393a.917.917 0 0 0 .692 1.097l41.062 9.298a.917.917 0 0 0 1.097-.692l.089-.393ZM156.468 106.811a.917.917 0 0 0-.692-1.097l-18.622-4.217a.918.918 0 0 0-1.098.692l-.089.393a.918.918 0 0 0 .692 1.098l18.622 4.217a.919.919 0 0 0 1.098-.693l.089-.393Z" />
+            </g>
+            <g id="avatar">
+              <path id="avatar-background" fill="#f5f5f5" d="M195.919 104.031a5.942 5.942 0 0 1 4.481 7.105 5.942 5.942 0 0 1-7.105 4.481 5.943 5.943 0 0 1-4.481-7.105 5.943 5.943 0 0 1 7.105-4.481Z" />
+              <path id="head" fill="#ffe2d4" d="M192.873 113.104c-1.024-.736-1.54-2.239-1.189-3.788.442-1.955 2.097-3.248 3.692-2.887 1.595.361 2.531 2.241 2.088 4.195-.351 1.55-1.464 2.684-2.705 2.907 0 0 .054 1.224-.313 1.384-.367.159-1.624-.126-1.887-.427-.262-.302.314-1.384.314-1.384Z" />
+              <path id="hair" fill="#ffb6e2" d="M195.989 107.116c-.041.595-.126 2.79.774 3.091 1.043.348 1.434.605 1.292 1.106-.141.501 2.745-5.06-1.112-5.781a11.273 11.273 0 0 0-.528-.087c-.156-.74-.853-1.004-2.048-.802-1.488.252-2.996 1.463-2.956 2.566.04 1.103-.962 2.924-.962 2.924s1.766-.077 2.163-.96c.396-.882.935-2.602 2.127-2.211.602.198.993.279 1.25.154Z" />
+            </g>
+          </g>
+          <g id="message-row-2">
+            <g id="message1">
+              <path fill="#bbb" d="M193.249 142.716a5.974 5.974 0 0 0-4.505-7.142l-41.811-9.468a5.974 5.974 0 0 0-7.142 4.505l-2.638 11.647a5.975 5.975 0 0 0 4.505 7.142l41.812 9.468a5.975 5.975 0 0 0 7.142-4.505l2.637-11.647Z" />
+              <path fill="#f5f5f5" d="M192.735 141.223a5.975 5.975 0 0 0-4.505-7.143l-41.812-9.467a5.974 5.974 0 0 0-7.142 4.505l-2.637 11.647a5.974 5.974 0 0 0 4.505 7.142l41.812 9.467a5.974 5.974 0 0 0 7.142-4.505l2.637-11.646Z" />
+              <path fill="#bbb" d="M188.076 139.564a.918.918 0 0 0-.693-1.097l-42.09-9.531a.918.918 0 0 0-1.098.692l-.089.393a.919.919 0 0 0 .693 1.098l42.09 9.531a.919.919 0 0 0 1.098-.693l.089-.393ZM183.428 142.858a.918.918 0 0 0-.692-1.098l-38.379-8.69a.918.918 0 0 0-1.098.692l-.089.393a.919.919 0 0 0 .693 1.098l38.379 8.69a.918.918 0 0 0 1.098-.692l.088-.393ZM185.175 147.599a.92.92 0 0 0-.693-1.098l-41.061-9.297a.918.918 0 0 0-1.098.692l-.089.393a.919.919 0 0 0 .693 1.098l41.061 9.297a.918.918 0 0 0 1.098-.692l.089-.393ZM161.799 146.652a.918.918 0 0 0-.692-1.098l-18.622-4.217a.919.919 0 0 0-1.098.693l-.089.393a.918.918 0 0 0 .693 1.097l18.622 4.217a.917.917 0 0 0 1.097-.692l.089-.393Z" />
+            </g>
+            <g id="avatar1">
+              <path id="avatar-background1" fill="#f5f5f5" d="M131.262 128.023a5.943 5.943 0 0 1 4.481 7.105 5.943 5.943 0 0 1-7.105 4.481 5.942 5.942 0 0 1-4.481-7.104 5.942 5.942 0 0 1 7.105-4.482Z" />
+              <path fill="#c67b5b" d="M127.037 135.555a3.548 3.548 0 0 1-.683-2.976c.439-1.941 2.43-3.147 4.444-2.691 2.013.455 3.291 2.401 2.851 4.343a3.542 3.542 0 0 1-1.815 2.348c.031 1.06.355 1.827.355 1.827-2.985.846-3.105-.735-3.105-.735s.071.018.233-.726a4.449 4.449 0 0 1-.112-.023l-.026-.006c-.173.739-.102.754-.102.754s-.789 1.375-3.118-.675c0 0 .599-.531 1.078-1.44Z" />
+              <path id="head1" fill="#ffe2d4" d="M128.216 137.097c-1.024-.736-1.54-2.239-1.189-3.789.442-1.954 2.096-3.247 3.692-2.886 1.595.361 2.53 2.241 2.088 4.195-.351 1.55-1.464 2.684-2.705 2.907 0 0 .053 1.224-.313 1.383-.367.16-1.625-.125-1.887-.427s.314-1.383.314-1.383Z" />
+              <path fill="#c67b5b" d="M127.408 131.625s-.123.903 2.7 1.494c2.823.591 3.043-.021 3.043-.021l-.461-1.833-1.906-1.133-2.112.19-1.264 1.303Z" />
+            </g>
+          </g>
+          <g id="message-row-3">
+            <g id="message2">
+              <path fill="#bbb" d="M171.102 174.937a4.86 4.86 0 0 0-3.665-5.811l-43.982-9.959a4.86 4.86 0 0 0-5.812 3.665l-2.146 9.477a4.861 4.861 0 0 0 3.666 5.811l43.982 9.959a4.86 4.86 0 0 0 5.811-3.665l2.146-9.477Z" />
+              <path fill="#f5f5f5" d="M170.532 173.688a4.86 4.86 0 0 0-3.665-5.812l-43.982-9.959a4.861 4.861 0 0 0-5.811 3.666l-2.146 9.476a4.862 4.862 0 0 0 3.665 5.812l43.982 9.959a4.862 4.862 0 0 0 5.812-3.666l2.145-9.476Z" />
+              <path fill="#bbb" d="M165.96 173.529a.918.918 0 0 0-.692-1.098l-42.091-9.531a.919.919 0 0 0-1.098.693l-.089.393a.918.918 0 0 0 .693 1.097l42.09 9.531a.918.918 0 0 0 1.098-.692l.089-.393ZM161.288 176.929a.917.917 0 0 0-.692-1.097l-38.379-8.691a.919.919 0 0 0-1.098.693l-.089.393a.917.917 0 0 0 .693 1.097l38.379 8.691a.917.917 0 0 0 1.097-.693l.089-.393ZM141.07 176.81a.918.918 0 0 0-.692-1.098l-18.622-4.217a.919.919 0 0 0-1.098.693l-.089.393a.917.917 0 0 0 .692 1.097l18.622 4.217a.918.918 0 0 0 1.098-.692l.089-.393Z" />
+            </g>
+            <g id="avatar2">
+              <path id="avatar-background2" fill="#f5f5f5" d="M179.795 175.236a5.943 5.943 0 0 1 4.482 7.105 5.944 5.944 0 0 1-7.105 4.482 5.943 5.943 0 0 1-4.481-7.105 5.942 5.942 0 0 1 7.104-4.482Z" />
+              <path id="head2" fill="#ffe2d4" d="M176.749 184.31c-1.024-.736-1.539-2.239-1.189-3.789.443-1.954 2.097-3.247 3.692-2.886 1.595.361 2.531 2.241 2.089 4.195-.351 1.55-1.464 2.684-2.705 2.907 0 0 .053 1.224-.313 1.383-.367.16-1.625-.125-1.887-.427s.313-1.383.313-1.383Z" />
+              <path id="hair1" fill="#ffb6e2" d="M179.865 178.322c-.04.595-.126 2.79.775 3.091 1.043.348 1.433.605 1.292 1.106-.142.501 2.745-5.061-1.113-5.781a11.034 11.034 0 0 0-.527-.087c-.156-.741-.853-1.005-2.049-.802-1.487.252-2.996 1.463-2.956 2.566.041 1.103-.961 2.924-.961 2.924s1.766-.077 2.162-.96c.396-.883.936-2.603 2.128-2.211.602.198.992.278 1.249.154Z" />
+            </g>
+          </g>
+        </g>
+        <g id="message-row__new">
+          <g id="new-message">
+            <path fill="#bbb" d="M177.279 213.246a7.327 7.327 0 0 0-5.526-8.761l-39.172-8.87a7.329 7.329 0 0 0-8.761 5.526l-3.235 14.286a7.328 7.328 0 0 0 5.526 8.76l39.173 8.87a7.326 7.326 0 0 0 8.76-5.525l3.235-14.286Z" />
+            <path fill="#f5f5f5" d="M176.832 211.455a7.327 7.327 0 0 0-5.526-8.76l-39.173-8.87a7.327 7.327 0 0 0-8.76 5.526l-3.235 14.285a7.329 7.329 0 0 0 5.526 8.761l39.173 8.87a7.327 7.327 0 0 0 8.76-5.526l3.235-14.286Z" />
+            <path fill="#bbb" d="M172.382 208.873a.918.918 0 0 0-.692-1.098l-42.091-9.53a.918.918 0 0 0-1.098.692l-.089.393a.92.92 0 0 0 .693 1.098l42.09 9.53a.918.918 0 0 0 1.098-.692l.089-.393ZM167.715 212.255a.919.919 0 0 0-.693-1.098l-38.379-8.69a.918.918 0 0 0-1.098.692l-.089.393a.92.92 0 0 0 .693 1.098l38.379 8.69a.918.918 0 0 0 1.098-.692l.089-.393ZM165.803 220.699a.918.918 0 0 0-.693-1.097l-38.379-8.691a.919.919 0 0 0-1.098.693l-.089.393a.918.918 0 0 0 .693 1.097l38.379 8.691a.92.92 0 0 0 1.098-.693l.089-.393ZM169.441 217.084a.918.918 0 0 0-.693-1.097l-41.061-9.298a.918.918 0 0 0-1.098.692l-.089.393a.919.919 0 0 0 .693 1.098l41.061 9.298a.919.919 0 0 0 1.098-.693l.089-.393ZM145.089 220.448a.918.918 0 0 0-.692-1.098l-18.622-4.217a.92.92 0 0 0-1.098.693l-.089.393a.917.917 0 0 0 .693 1.097l18.622 4.217a.917.917 0 0 0 1.097-.692l.089-.393Z" />
+          </g>
+          <g id="avatar3">
+            <path id="avatar-background3" fill="#f5f5f5" d="M115.026 199.724a5.943 5.943 0 0 1 4.481 7.105 5.941 5.941 0 0 1-7.104 4.481 5.942 5.942 0 0 1-4.482-7.105 5.943 5.943 0 0 1 7.105-4.481Z" />
+            <path fill="#c67b5b" d="M110.802 207.256a3.55 3.55 0 0 1-.684-2.977c.44-1.941 2.431-3.147 4.444-2.691 2.014.456 3.291 2.402 2.852 4.343a3.548 3.548 0 0 1-1.816 2.349c.031 1.06.355 1.826.355 1.826-2.985.847-3.105-.734-3.105-.734s.072.018.234-.726a2.274 2.274 0 0 1-.113-.024l-.025-.005c-.174.739-.102.753-.102.753s-.789 1.376-3.119-.674c0 0 .599-.531 1.079-1.44Z" />
+            <path id="head3" fill="#ffe2d4" d="M111.98 208.797c-1.024-.735-1.54-2.238-1.189-3.788.443-1.954 2.097-3.248 3.692-2.886 1.595.361 2.531 2.241 2.088 4.195-.35 1.549-1.463 2.684-2.704 2.907 0 0 .053 1.224-.314 1.383-.366.159-1.624-.125-1.886-.427-.262-.302.313-1.384.313-1.384Z" />
+            <path fill="#c67b5b" d="M111.172 203.325s-.122.904 2.7 1.495c2.823.591 3.043-.021 3.043-.021l-.46-1.833-1.906-1.133-2.112.19-1.265 1.302Z" />
+          </g>
+        </g>
+      </g>
+    </g>
+    <path id="left-hand__thumb" fill="#f8d2bf" d="M68.344 211.106s29.884-82.666 51.066-59.839c7.791 8.397.451 14.514-8.85 24.905-9.3 10.392-9.632 15.457-10.993 26.142" />
+    <g id="liked-message">
+      <circle id="heart-background" cx="237.226" cy="56.005" r="23.101" fill="#d0e4ff" />
+      <path id="heart" fill="#ff5ea8" d="M237.226 47.161c3.04-5.576 9.119-5.576 12.158-2.788 3.04 2.788 3.04 8.365 0 13.942-2.127 4.182-7.598 8.365-12.158 11.153-4.559-2.788-10.03-6.971-12.157-11.153-3.04-5.577-3.04-11.154 0-13.942 3.039-2.788 9.118-2.788 12.157 2.788Z" />
+    </g>
+    <path id="second-motion-path" mask="url(#secondMask)" fill="none" stroke="#7c7c7c" stroke-dasharray="16.67,8.33,0,0" stroke-width="4.17" d="M260.327 79.106s38.955 22.342 11.795 70.894" />
+    <g id="paper-airplane">
+      <path fill="#b2d3ff" d="M272.137 172.298 234.275 150l36.301 38.651 1.561-16.353" />
+      <path fill="#9bc0f3" d="m269.306 174.196 1.281 14.455-5.867-6.406 4.586-8.049Z" />
+      <path fill="#d0e4ff" d="m234.275 150 24.884 44.597 10.147-20.268L234.275 150ZM272.137 172.298 234.275 150l51.502 18.29-13.64 4.008" />
+    </g>
+    <g id="right-arm">
+      <path id="right-hand" fill="#ffe2d4" d="M187.856 254.276c-14.624-14.489-39.923-41.297-33.105-47.053 8.339-7.041 23.932 6.877 40.865 24.746 3.246-4.859 7.241-8.911 11.699-12.077 2.174-2.071 4.987-4.522 8.622-7.416 18.456-14.694 36.529 5.134 36.529 5.134 14.467 9.057 20.838 26.46 17.41 43.297l15.901 12.685-33.416 39.273-19.611-15.644c-9.109 1.433-18.534-.194-26.7-5.306a38.031 38.031 0 0 1-3.774-2.695c-11.402-3.459-23.984-9.558-23.303-19.547.484-7.116 4.144-11.956 8.864-15.131l.009-.125.009-.129.001-.012Z" />
+      <g id="right-sleeve">
+        <path fill="#599fff" d="M295.68 274.561c-7.298-7.413-19.242-7.507-26.656-.209l-17.91 17.63c-7.414 7.298-7.508 19.242-.21 26.656l38.597 39.209c7.298 7.413 19.242 7.507 26.655.209l17.911-17.63c7.413-7.298 7.507-19.242.209-26.656l-38.596-39.209Z" />
+        <path fill="#ff5ea8" d="M286.573 249.931a7.925 7.925 0 0 0-11.202-.088l-48.428 47.672a7.925 7.925 0 0 0-.088 11.202l7.409 7.526a7.923 7.923 0 0 0 11.201.088l48.429-47.672a7.926 7.926 0 0 0 .088-11.202l-7.409-7.526Z" />
+      </g>
+    </g>
+  </svg>
+</div>

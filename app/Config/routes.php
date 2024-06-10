@@ -37,8 +37,7 @@
 	Router::connect('/thankyou', array('controller' => 'login', 'action' => 'thankyou'));
 	Router::connect('/messages', array('controller' => 'messages', 'action' => 'index'));
 	Router::connect('/messages/add', array('controller' => 'messages', 'action' => 'add'));
-	Router::connect('/messages/:id', array('controller' => 'messages', 'action' => 'conversation'));
-	Router::connect('/messages/conversation/:id', array('controller' => 'messages', 'action' => 'conversation'), 'id');
+	Router::connect('/messages/conversation/:id/*', array('controller' => 'messages', 'action' => 'conversation'));
 	
 
 	

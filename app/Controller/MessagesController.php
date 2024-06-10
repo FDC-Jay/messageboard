@@ -12,7 +12,7 @@ class MessagesController extends AppController {
         parent::beforeFilter();
         $this->layout = 'index';
 
-        $this->Auth->allow('conversation');
+        $this->Auth->allow('');
         
         $this->set('username', $this->Auth->user('name'));
     }
@@ -152,7 +152,7 @@ class MessagesController extends AppController {
             'order' => [
                 'Messages.modified' => 'asc'
             ],
-            'limit' => 7
+            'limit' => 5
         ];
 
         
@@ -178,7 +178,7 @@ class MessagesController extends AppController {
                 ));
             }
 
-            return json_encode(array('message' => $response, 'test' => $this->request->params));
+            return json_encode(array('message' => $response, 'paginator' => $this->params['paging']['Messages']));
         }
     
         $this->set('messages', $messages);

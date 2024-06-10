@@ -74,6 +74,10 @@ class AppController extends Controller {
             'index', 
             'view',
         );
+
+        if($this->Auth->user('id')) {
+            $this->set('userdata', $this->Auth->user());            
+        }
     }
 
 

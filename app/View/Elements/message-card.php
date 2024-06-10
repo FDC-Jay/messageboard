@@ -1,6 +1,6 @@
 <div class="card mb-2 <?php echo isset($is_current_user) && $is_current_user ? 'mr-auto' : 'ml-auto'; ?>">
     <?php if ($page == 'index') : ?>
-        <a href="<?php echo $this->webroot . 'messages/' . $message_id; ?>">
+        <a href="<?php echo $this->webroot . 'messages/conversation/' . $message_id; ?>">
         <?php endif; ?>
 
         <div class="card-body d-flex <?php echo isset($is_current_user) && $is_current_user ? 'justify-content-start' : 'justify-content-end'; ?>">

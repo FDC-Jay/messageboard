@@ -35,8 +35,30 @@
 
 </head>
 <body>
+    <!-- Image and text -->
+    <nav class="navbar navbar-light bg-light">
+        <div class="container justify-content-start">
+            <a class="navbar-brand" href="<?php echo $this->webroot; ?>">
+                <i class="fa fa-home" aria-hidden="true"></i>
+                Home
+            </a>
+            <a class="navbar-brand" href="<?php echo $this->webroot; ?>messages">
+                <i class="fa fa-comments-o" aria-hidden="true"></i>
+                Messages
+            </a>
+            <a href="<?php echo $this->webroot . 'user/' . $userdata['id'] ?>" class="profile_link ml-auto">
+                <?php 
+                    $img_path = $this->webroot . '/img/profile.png';
+                    if(!empty($userdata['profile_pic'])): ?> 
+                        <?php $img_path = $userdata['profile_pic']; ?>
+                    <?php endif; ?>
+                    <img class="profile sm" src="<?php echo $img_path; ?>">
+                <?php echo $userdata['name'] ?>
+            </a>
+        </div>
+    </nav>
     <div class="container pt-5">
-        <?php echo $this->element('header'); ?>
+        <!-- < ?php echo $this->element('header'); ?> -->
         <!-- < ?php echo $this->Flash->render(); ?> -->
         <?php echo $this->fetch('content'); ?>
     </div>

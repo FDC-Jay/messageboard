@@ -16,7 +16,6 @@
                 'page' => 'index'
             ));
         endforeach;
-    } else { ?>
-        <a href="<?php echo $this->webroot; ?>messages/add" class="btn btn-info">New Message</a>
-    <?php }
-?>
+    }  ?>
+
+<a href="<?php echo $this->webroot; ?>messages/add" class="btn btn-info mt-4">New Message</a>
